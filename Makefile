@@ -1,8 +1,11 @@
 CXX = g++
 
-CFILES = $(shell find -name "*.cpp")
-OBJS = $(CFILES:.cpp=.obj)
 INC_DIR = ./inc
+SRC_DIR = ./src 
+OBJ_DIR = ./obj
+
+CPPFILES = $(shell find -name "*.cpp")
+OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.obj, $(CPPFILES))
 
 CXXFLAGS = -O2 -Wall
 CXXFLAGS += -std=gnu++11
@@ -11,7 +14,8 @@ CXXFLAGS += -I$(INC_DIR)
 cache.bin: $(OBJS)
 	$(CXX) $(OBJS) -o cache.bin
 
-%.obj: %.cpp
+$(OBJ_DIR)/%.obj: %.cpp
+	@mkdir -p $(@D)
 	$(CXX) $< $(CXXFLAGS) -c -o $@
 
 .PHONY: clean
