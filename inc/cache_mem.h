@@ -2,20 +2,20 @@
 #define __CACHE_MEM_H__
 
 #include <cstdint>
-#include <vector>
+#include "mem.h"
 
-class cache_mem {
+class cache_direct_map {
     private:
-        mem_object valid_col;
-        mem_object tag_col;
+        mem_object *valid_col;
+        mem_object *tag_col;
+        uint32_t n_raws;
 
     public:
-        cache_mem(int tag_width, int n_raw) { // number of raws
-            valid_col = new mem_object(1, n_raw);
-            tag_col = new mem_object(tag_width, n_raw);
-        }
+        cache_direct_map(int tag_width, int n_r);// number of raws
 
-        bool match(uint32_t 
+        bool match(uint32_t tag_in, uint32_t addr);
+
+        void invalidata_all();
 };
 
 #endif
