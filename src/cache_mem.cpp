@@ -1,8 +1,15 @@
 #include "cache_mem.h"
+#include <cassert>
 
-cache_direct_map :: cache_direct_map(int tag_width, int n_r) { // number of raws
+cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width) {
     valid_col = new mem_object(1, n_r);
     tag_col = new mem_object(tag_width, n_r);
+    if(age_width != 0) {
+        age_col = new mem_object(age_width, n_r);
+    }
+    else {
+        age_col = nullptr;
+    }
     n_raws = n_r;
 }
 
@@ -18,3 +25,25 @@ void cache_direct_map :: invalidata_all() {
         valid_col->write(i, 0);
     }
 }
+
+void cache_direct_map :: write(uint32_t tag_in, uint32_t addr) {
+    tag_col->write(addr, tag_in);
+    valid_col->write(addr, 1); // 1 for valid
+    age_col->write(addr, ~0);
+}
+
+void cache_direct_map :: time_pass_by() {
+    assert(age_col != nullptr);
+    uint32_t i;
+    for(i = 0; i < n_raws; i++) {
+        if(valid_col->read(i) && age_col->read(i)) { // > 0 and valid
+            age_col->write(i, age_col->read(i) - 1);
+        }
+    }
+}
+
+uint32_t cache_direct_map :: get_recent_use(uint32_t addr) {
+    assert(age_col != nullptr);
+    return age_col->read(addr);
+}
+

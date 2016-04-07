@@ -7,7 +7,7 @@ OBJ_DIR = ./obj
 CPPFILES = $(shell find -name "*.cpp")
 OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.obj, $(CPPFILES))
 
-CXXFLAGS = -O2 -Wall
+CXXFLAGS = -O2 -Wall -Werror
 CXXFLAGS += -std=gnu++11
 CXXFLAGS += -I$(INC_DIR)
 
