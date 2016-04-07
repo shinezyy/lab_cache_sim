@@ -9,7 +9,7 @@ class mem_object {
     private:
         std::vector<uint32_t> *mem;
         uint32_t mask;
-        uint32_t n_columns, n_raws;
+        uint32_t n_columns, n_raws; // number of columns and raws
 
     public:
         mem_object(int n_col, int n_raw);
