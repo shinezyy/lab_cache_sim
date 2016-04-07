@@ -1,16 +1,21 @@
 CXX = g++
-CXXFLAGS = -O2 -Wall
 
 CFILES = $(shell find -name "*.cpp")
 OBJS = $(CFILES:.cpp=.obj)
+INC_DIR = ./inc
 
+CXXFLAGS = -O2 -Wall
+CXXFLAGS += -std=gnu++11
+CXXFLAGS += -I$(INC_DIR)
 
-.PHONY: build clean
-
-build: $(OBJS)
+cache.bin: $(OBJS)
+	$(CXX) $(OBJS) -o cache.bin
 
 %.obj: %.cpp
-	$(CXX) $< $(CXXFLAGS) -o $@
+	$(CXX) $< $(CXXFLAGS) -c -o $@
+
+.PHONY: clean
 
 clean:
-	rm $(BINARY) 2> /dev/null
+	rm $(OBJS) 2> /dev/null
+	rm cache.bin 2> /dev/null
