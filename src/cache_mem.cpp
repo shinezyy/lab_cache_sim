@@ -16,7 +16,15 @@ cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t 
 bool cache_direct_map :: match(uint32_t tag_in, uint32_t addr) {
     uint32_t valid = valid_col->read(addr);
     uint32_t tag_match = tag_col->read(addr) == tag_in;
-    return valid & tag_match;
+    if(valid & tag_match) {
+        if(age_col != nullptr) {
+            age_col->write(addr, ~0);
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void cache_direct_map :: invalidata_all() {
@@ -29,7 +37,9 @@ void cache_direct_map :: invalidata_all() {
 void cache_direct_map :: write(uint32_t tag_in, uint32_t addr) {
     tag_col->write(addr, tag_in);
     valid_col->write(addr, 1); // 1 for valid
-    age_col->write(addr, ~0);
+    if(age_col != nullptr) {
+        age_col->write(addr, ~0);
+    }
 }
 
 void cache_direct_map :: time_pass_by() {

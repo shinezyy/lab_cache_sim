@@ -23,6 +23,7 @@ class cache_direct_map {
         void time_pass_by();
 
         uint32_t get_recent_use(uint32_t addr);
+
 };
 
 #endif
