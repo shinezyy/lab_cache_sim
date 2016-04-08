@@ -15,11 +15,25 @@ void test_direct_map_cache_mem() {
 }
 
 void test_cache() {
-    cache *c = new cache(64 << 10, 8, 1, false);
+    cache *c1 = new cache(64 << 10, 8, 1, false);
     cout << "X" <<endl;
-    cout << "read addr: 0x7f7f7f7f: " << c->read(0x7f7f7f7f) << endl;
-    cout << "write addr: 0x7f7f7f7f: " << c->write(0x7f7f7f7f, true) << endl;
-    cout << "read addr: 0x7f7f7f7f: " << c->read(0x7f7f7f7f) << endl;
+    cout << "read addr: 0x7f7f7f7f: " << c1->read(0x7f7f7f7f) << endl;
+    cout << "write addr: 0x7f7f7f7f: " << c1->write(0x7f7f7f7f, false) << endl;
+
+    cout << "read addr: 0x7f7f7f7d: " << c1->read(0x7f7f7f7d) << endl;
+    cout << "read addr: 0x7f7f7f7e: " << c1->read(0x7f7f7f7e) << endl;
+    cout << "read addr: 0x7f7f7f7f: " << c1->read(0x7f7f7f7f) << endl;
+    cout << "read addr: 0x7f7f7f80: " << c1->read(0x7f7f7f80) << endl;
+
+    cache *c2 = new cache(32 << 10, 32, 4, true);
+    cout << "read addr: 0x7f7f7f7f: " << c2->read(0x7f7f7f7f) << endl;
+    cout << "write addr: 0x7f7f7f7f: " << c2->write(0x7f7f7f7f, false) << endl;
+
+    cout << "read addr: 0x7f7f7f7d: " << c2->read(0x7f7f7f7d) << endl;
+    cout << "read addr: 0x7f7f7f7e: " << c2->read(0x7f7f7f7e) << endl;
+    cout << "read addr: 0x7f7f7f7f: " << c2->read(0x7f7f7f7f) << endl;
+    cout << "read addr: 0x7f7f7f5f: " << c2->read(0x7f7f7f5f) << endl;
+    cout << "read addr: 0x7f7f7f60: " << c2->read(0x7f7f7f60) << endl;
 }
 
 int main() {
