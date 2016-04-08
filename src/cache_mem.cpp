@@ -1,7 +1,12 @@
 #include "cache_mem.h"
+#include "debug.h"
 #include <cassert>
 
 cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width) {
+    log_var(tag_width);
+    log_var(n_r);
+    log_var(age_width);
+
     valid_col = new mem_object(1, n_r);
     tag_col = new mem_object(tag_width, n_r);
     if(age_width != 0) {
@@ -43,11 +48,12 @@ void cache_direct_map :: write(uint32_t tag_in, uint32_t addr) {
 }
 
 void cache_direct_map :: time_pass_by() {
-    assert(age_col != nullptr);
-    uint32_t i;
-    for(i = 0; i < n_raws; i++) {
-        if(valid_col->read(i) && age_col->read(i)) { // > 0 and valid
-            age_col->write(i, age_col->read(i) - 1);
+    if(age_col != nullptr){
+        uint32_t i;
+        for(i = 0; i < n_raws; i++) {
+            if(valid_col->read(i) && age_col->read(i)) { // > 0 and valid
+                age_col->write(i, age_col->read(i) - 1);
+            }
         }
     }
 }

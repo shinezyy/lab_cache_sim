@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include "debug.h"
 #include "cache.h"
 
 using namespace std;
@@ -34,7 +35,6 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru) {
     else {
         n_ways = assoc;
     }
-
     n_raws_in_way = n_raws_all / n_ways; // 1 for fully assoc...
 
     index_width = log2(n_raws_in_way);
@@ -45,7 +45,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru) {
     rand_sel = 0;
     uint32_t i;
     for(i = 0; i < n_ways; i++) {
-        simple_cache[i] = new cache_direct_map(tag_width, n_raws_in_way, age_width);
+        simple_cache.push_back(new cache_direct_map(tag_width, n_raws_in_way, age_width));
         simple_cache[i]->invalidata_all();
     }
 }
