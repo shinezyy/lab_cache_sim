@@ -1,4 +1,4 @@
-#include "cache_mem.h"
+#include "direct_mapped.h"
 #include "debug.h"
 #include <cassert>
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <cstdint>
-#include "cache_mem.h"
+#include "direct_mapped.h"
 
 #define LRU_LEN 4
 #define BUS_WIDTH 32

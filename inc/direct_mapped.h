@@ -1,5 +1,5 @@
-#ifndef __CACHE_MEM_H__
-#define __CACHE_MEM_H__
+#ifndef __DIRECT_MAPPED_H__
+#define __DIRECT_MAPPED_H__
 
 #include <cstdint>
 #include "mem.h"
