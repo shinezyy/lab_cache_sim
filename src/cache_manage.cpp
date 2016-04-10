@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <cstdint>
+#include <cstdio>
 
 #include "cache.h"
 #include "trace.h"
@@ -14,24 +15,22 @@ uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
     uint32_t i;
     uint64_t all_cycles = 0;
     for(i = 0; i < v_trace->size(); i++) {
-        bool load = true;
-        uint32_t addr, n_cycles;
-        if((*v_trace)[i][0] == 's') {
-            load = false;
-        }
-
-        sscanf((*v_trace)[i] + 2, "0x%x %d", &addr, &n_cycles);
+        uint32_t load, addr, n_cycles;
+        vector<int> *ret = str_to_addr((*v_trace)[i]);
+        load = (*ret)[0];
+        addr = (*ret)[1];
+        n_cycles = (*ret)[2];
+        //printf("%d 0x%x %d\n", load, addr, n_cycles);
         all_cycles += n_cycles;
+        all_cycles += L1_LTC;
 
         if(load) {
-            all_cycles += L1_LTC;
             if(!c->read(addr)) { // miss
                 all_cycles += OC_LTC;
                 c->write(addr, false, nullptr); // load block
             }
         }
         else { // store 
-            all_cycles += L1_LTC;
             if(!c->write(addr, true, nullptr)) { // miss
                 all_cycles += OC_LTC;
                 c->write(addr, false, nullptr); // load block
