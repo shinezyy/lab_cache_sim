@@ -46,7 +46,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru) {
     uint32_t i;
     for(i = 0; i < n_ways; i++) {
         simple_cache.push_back(new cache_direct_map(tag_width, n_raws_in_way, age_width));
-        simple_cache[i]->invalidata_all();
+        simple_cache[i]->invalidate_all();
     }
 }
 
@@ -109,7 +109,12 @@ bool cache :: read(uint32_t addr) {
     return false;
 }
 
-
+void cache :: invalidate_all() {
+    uint32_t i;
+    for(i = 0; i < simple_cache.size(); i++) {
+        simple_cache[i]->invalidate_all();
+    }
+}
 
 
 

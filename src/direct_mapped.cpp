@@ -32,7 +32,7 @@ bool cache_direct_map :: match(uint32_t tag_in, uint32_t addr) {
     }
 }
 
-void cache_direct_map :: invalidata_all() {
+void cache_direct_map :: invalidate_all() {
     uint32_t i;
     for(i = 0; i < n_raws; i++) {
         valid_col->write(i, 0);

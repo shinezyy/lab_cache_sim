@@ -19,10 +19,9 @@ class cache {
         uint32_t addr_to_index(uint32_t addr);
     public:
         cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru);
-
         bool write(uint32_t addr, bool cmp);
-
         bool read(uint32_t addr);
+        void invalidate_all();
 };
 
 #endif

@@ -1,4 +1,6 @@
 #include "mem.h"
+#include "debug.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -11,6 +13,13 @@ mem_object:: mem_object(int n_col, int n_raw) {
 
 uint32_t mem_object:: read(uint32_t addr) {
     assert(addr < n_raws);
+    /*
+    if(addr >= n_raws) {
+        log_var(addr);
+        log_var(n_raws);
+        exit(0);
+    }
+    */
     uint32_t primetive_data = (*mem)[addr];
     return primetive_data & mask;
 }

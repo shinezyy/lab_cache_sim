@@ -6,7 +6,7 @@ using namespace std;
 
 void test_direct_map_cache_mem() {
     cache_direct_map *dc = new cache_direct_map(10, 512, 0);
-    dc->invalidata_all();
+    dc->invalidate_all();
     dc->write(0xfff, 78);
     dc->write(0x1000, 98);
     cout << dc->match(0x3ff, 78) << endl;
@@ -48,8 +48,11 @@ void test_fin() {
     }
 }
 
+extern void test_L1();
+
 int main() {
-    test_fin();
+    test_L1();
+    //test_fin();
     //test_cache();
     //test_direct_map_cache_mem();
     return 0;

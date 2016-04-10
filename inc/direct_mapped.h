@@ -16,7 +16,7 @@ class cache_direct_map {
 
         bool match(uint32_t tag_in, uint32_t addr);
 
-        void invalidata_all();
+        void invalidate_all();
 
         void write(uint32_t tag_in, uint32_t addr);
 
