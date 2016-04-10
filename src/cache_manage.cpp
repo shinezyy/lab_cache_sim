@@ -1,45 +1,14 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <cstdint>
 
 #include "cache.h"
+#include "trace.h"
+#include "latency.h"
 
 using namespace std;
-
-/* trace file input */
-
-string file_dir = "./traces/";
-
-vector<string> trace_files = {
-    "gcc.trace",
-    "gzip.trace",
-    "mcf.trace",
-    "swim.trace",
-    "twolf.trace"
-};
-
-vector<char *> *get_trace(string& trace_file_name) {
-    ifstream infile;
-    infile.open(file_dir + trace_file_name);
-    vector<char *> *ret = new vector<char *>;
-    while(!infile.eof()) {
-        char *str = new char[20];
-        infile.getline(str, 20);
-        ret->push_back(str);
-    }
-    return ret;
-}
-
-
-/* Latency */
-
-const uint32_t L1_LTC = 1;
-const uint32_t VIC_LTC = 1;     // victim cache
-const uint32_t L2_LTC = 10;
-const uint32_t OC_LTC = 100;    // off-chip
 
 uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
     uint32_t i;
@@ -58,14 +27,14 @@ uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
             all_cycles += L1_LTC;
             if(!c->read(addr)) { // miss
                 all_cycles += OC_LTC;
-                c->write(addr, false); // load block
+                c->write(addr, false, nullptr); // load block
             }
         }
         else { // store 
             all_cycles += L1_LTC;
-            if(!c->write(addr, true)) { // miss
+            if(!c->write(addr, true, nullptr)) { // miss
                 all_cycles += OC_LTC;
-                c->write(addr, false); // load block
+                c->write(addr, false, nullptr); // load block
             }
         }
     }

@@ -19,7 +19,7 @@ void test_cache() {
     cache *c1 = new cache(64 << 10, 8, 1, false);
     cout << "X" <<endl;
     cout << "read addr: 0x7f7f7f7f: " << c1->read(0x7f7f7f7f) << endl;
-    cout << "write addr: 0x7f7f7f7f: " << c1->write(0x7f7f7f7f, false) << endl;
+    cout << "write addr: 0x7f7f7f7f: " << c1->write(0x7f7f7f7f, false, nullptr) << endl;
 
     cout << "read addr: 0x7f7f7f7d: " << c1->read(0x7f7f7f7d) << endl;
     cout << "read addr: 0x7f7f7f7e: " << c1->read(0x7f7f7f7e) << endl;
@@ -28,7 +28,7 @@ void test_cache() {
 
     cache *c2 = new cache(32 << 10, 32, 4, true);
     cout << "read addr: 0x7f7f7f7f: " << c2->read(0x7f7f7f7f) << endl;
-    cout << "write addr: 0x7f7f7f7f: " << c2->write(0x7f7f7f7f, false) << endl;
+    cout << "write addr: 0x7f7f7f7f: " << c2->write(0x7f7f7f7f, false, nullptr) << endl;
 
     cout << "read addr: 0x7f7f7f7d: " << c2->read(0x7f7f7f7d) << endl;
     cout << "read addr: 0x7f7f7f7e: " << c2->read(0x7f7f7f7e) << endl;
