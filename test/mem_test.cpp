@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "cache.h"
 
 using namespace std;
@@ -36,8 +37,20 @@ void test_cache() {
     cout << "read addr: 0x7f7f7f60: " << c2->read(0x7f7f7f60) << endl;
 }
 
+extern vector<string> trace_files;
+extern vector<char *> *get_trace(string& trace_file_name);
+
+void test_fin() {
+    vector<char *> *v_trace = get_trace(trace_files[0]);
+    unsigned int i;
+    for(i = 0; i < v_trace->size(); i++) {
+        cout << (*v_trace)[i];
+    }
+}
+
 int main() {
-    test_cache();
+    test_fin();
+    //test_cache();
     //test_direct_map_cache_mem();
     return 0;
 }
