@@ -55,19 +55,15 @@ uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
         all_cycles += n_cycles;
 
         if(load) {
-            if(c->read(addr)) { // hit
-                all_cycles += L1_LTC;
-            }
-            else { // miss
+            all_cycles += L1_LTC;
+            if(!c->read(addr)) { // miss
                 all_cycles += OC_LTC;
                 c->write(addr, false); // load block
             }
         }
         else { // store 
-            if(c->write(addr, true)) { // hit
-                all_cycles += L1_LTC;
-            }
-            else { // miss
+            all_cycles += L1_LTC;
+            if(!c->write(addr, true)) { // miss
                 all_cycles += OC_LTC;
                 c->write(addr, false); // load block
             }

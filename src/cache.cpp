@@ -50,7 +50,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru) {
     }
 }
 
-bool cache :: write(uint32_t addr, bool cmp) {
+bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
     if(cmp) {
         for(auto it = simple_cache.begin(); it != simple_cache.end(); it++) {
             (*it)->time_pass_by();
@@ -83,6 +83,8 @@ bool cache :: write(uint32_t addr, bool cmp) {
                 rand_sel -= simple_cache.size();
             }
             simple_cache[rand_sel]->write(addr_to_tag(addr), addr_to_index(addr));
+            uint32_t victim_tag = simple_cache[rand_sel]->get_tag(addr_to_index(addr));
+            *victim = (victim_tag << (index_width + offset_width) | (rand_sel << index_width) ;
         }
         return true;
     }
@@ -115,7 +117,3 @@ void cache :: invalidate_all() {
         simple_cache[i]->invalidate_all();
     }
 }
-
-
-
-

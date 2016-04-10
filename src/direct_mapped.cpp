@@ -3,12 +3,6 @@
 #include <cassert>
 
 cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width) {
-    /*
-    log_var(tag_width);
-    log_var(n_r);
-    log_var(age_width);
-    */
-
     valid_col = new mem_object(1, n_r);
     tag_col = new mem_object(tag_width, n_r);
     if(age_width != 0) {
@@ -64,4 +58,11 @@ uint32_t cache_direct_map :: get_recent_use(uint32_t addr) {
     assert(age_col != nullptr);
     return age_col->read(addr);
 }
+
+uint32_t cache_direct_map :: get_tag(uint32_t addr) {
+    assert(addr < n_raws);
+    return tag_col->read(addr);
+}
+
+
 

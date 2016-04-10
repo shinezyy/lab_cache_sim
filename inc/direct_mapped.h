@@ -24,6 +24,7 @@ class cache_direct_map {
 
         uint32_t get_recent_use(uint32_t addr);
 
+        uint32_t get_tag(uint32_t addr);
 };
 
 #endif
