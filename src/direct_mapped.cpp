@@ -3,9 +3,11 @@
 #include <cassert>
 
 cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width) {
+    /*
     log_var(tag_width);
     log_var(n_r);
     log_var(age_width);
+    */
 
     valid_col = new mem_object(1, n_r);
     tag_col = new mem_object(tag_width, n_r);

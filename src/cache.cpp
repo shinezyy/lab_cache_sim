@@ -94,7 +94,7 @@ uint32_t cache :: addr_to_tag(uint32_t addr) {
 
 
 uint32_t cache :: addr_to_index(uint32_t addr) {
-    return (addr << tag_width) >> (BUS_WIDTH - index_width);
+    return index_width ? (addr << tag_width) >> (BUS_WIDTH - index_width) : 0;
 }
 
 bool cache :: read(uint32_t addr) {
