@@ -99,7 +99,7 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
         else { // store 
             if(!c1->write(addr, true, nullptr)) { // miss
                 l1_miss = true;
-                l1_w_miss = 1;
+                l1_w_miss += 1;
             }
             else {
                 l1_w_hit += 1;

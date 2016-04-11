@@ -71,7 +71,6 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         if(!l1_miss) {
             continue;
         }
-        l1_miss += 1;
 
         // L1 miss :
         // L2 cache :
