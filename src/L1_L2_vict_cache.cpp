@@ -38,12 +38,12 @@ bool victim_cache :: read(uint32_t addr) {
     }
 }
 
-uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
-uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
-uint64_t n_vc_hit, n_vc_miss;
-uint64_t mem_r, mem_w;
+static uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
+static uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
+static uint64_t n_vc_hit, n_vc_miss;
+static uint64_t mem_r, mem_w;
 
-void counter_init(){
+static void counter_init(){
     l1_r_hit = 0;
     l1_w_hit = 0;
     l1_r_miss = 0;
@@ -137,8 +137,8 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
 
         if(load) {
             if(!c2->read(addr)) { // miss
-                l2_miss = true;
                 l2_r_miss += 1;
+                l2_miss = true;
             }
             else {
                 l2_r_hit += 1;
@@ -185,12 +185,13 @@ void test_L1_L2_vict() {
         c1->invalidate_all();
         vc->invalidate_all();
         c2->invalidate_all();
-        cout << trace_files[i] << ":\n";
+        cout << trace_files[i] << "-------------------------------------------\n";
         cout << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
         cout << "L1 hit: " << l1_r_hit + l1_w_hit 
             << ", miss: " << l1_r_miss + l1_w_miss << endl;
         cout << "L2 hit: " << l2_r_hit + l2_w_hit 
             << ", miss: " << l2_r_miss + l2_w_miss << endl;
-        cout << "victim cache hit: " << n_vc_hit << "miss: " << n_vc_miss << endl;
+        cout << "victim cache hit: " << n_vc_hit << ", miss: " << n_vc_miss << endl;
     }
 }
+
