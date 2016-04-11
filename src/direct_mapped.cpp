@@ -29,6 +29,18 @@ bool cache_direct_map :: match(uint32_t tag_in, uint32_t addr) {
     }
 }
 
+bool cache_direct_map :: match_without_aging(uint32_t tag_in, uint32_t addr) {
+    assert(addr < n_raws);
+    uint32_t valid = valid_col->read(addr);
+    uint32_t tag_match = tag_col->read(addr) == tag_in;
+    if(valid & tag_match) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void cache_direct_map :: invalidate_all() {
     uint32_t i;
     for(i = 0; i < n_raws; i++) {
@@ -70,4 +82,9 @@ uint32_t cache_direct_map :: get_tag(uint32_t addr) {
 uint32_t cache_direct_map :: get_valid(uint32_t addr) {
     assert(addr < n_raws);
     return valid_col->read(addr);
+}
+
+void cache_direct_map :: invalidate_a_line(uint32_t addr) {
+    assert(addr < n_raws);
+    valid_col->write(addr, 0);
 }
