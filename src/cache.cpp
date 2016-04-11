@@ -65,6 +65,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         return false;
     }
     else { // replacement
+        uint32_t victim_idx = 0;
         if(lru) {
             uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
             uint32_t min_idx = 0;
@@ -75,20 +76,23 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
                     min_idx = i;
                 }
             }
-            simple_cache[min_idx]->write(addr_to_tag(addr), addr_to_index(addr));
+            victim_idx = min_idx;
         }
         else {
             rand_sel += 1;
             if(rand_sel >= simple_cache.size()){
                 rand_sel -= simple_cache.size();
             }
-            simple_cache[rand_sel]->write(addr_to_tag(addr), addr_to_index(addr));
-            if(victim) {
-                uint32_t victim_tag = simple_cache[rand_sel]->get_tag(addr_to_index(addr));
-                *victim = (victim_tag << (index_width + offset_width)) 
-                    | (rand_sel << index_width) ;
-            }
+            victim_idx = rand_sel;
         }
+
+        simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
+        if(victim != nullptr) {
+            uint32_t victim_tag = simple_cache[rand_sel]->get_tag(addr_to_index(addr));
+            *victim = (victim_tag << (index_width + offset_width))
+                | (victim_idx << index_width);
+        }
+
         return true;
     }
 }
