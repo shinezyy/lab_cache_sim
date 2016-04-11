@@ -12,6 +12,8 @@
 
 using namespace std;
 
+uint64_t l1_hit, l1_miss, l2_hit, l2_miss;
+
 uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // return cycles
     uint32_t i;
     uint64_t all_cycles = 0;
@@ -43,8 +45,10 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         }
 
         if(!l1_miss) {
+            l1_hit += 1;
             continue;
         }
+        l1_miss += 1;
 
         // L1 miss :
         // L2 cache :
@@ -63,8 +67,10 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
 
         if(!l2_miss) {
             c1->write(addr, false, nullptr);
+            l2_hit += 1;
             continue;
         }
+        l2_miss += 1;
 
         // L2 miss :
         all_cycles += OC_LTC; // fetch from mem
@@ -85,6 +91,8 @@ void test_L1_L2() {
         c2->invalidate_all();
         cout << "cycles of " << trace_files[i] << ":\n";
         cout << benchmark_L1_L2(c1, c2, get_trace(trace_files[i])) << endl;
+        cout << "L1 hit: " << l1_hit << ", miss: " << l1_miss << endl;
+        cout << "L2 hit: " << l2_hit << ", miss: " << l2_miss << endl;
     }
 }
 

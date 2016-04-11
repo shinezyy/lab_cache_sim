@@ -149,6 +149,7 @@ void cache :: invalidate_a_line(uint32_t addr) {
     uint32_t i;
     uint32_t n_ways = simple_cache.size();
     uint32_t index = addr_to_index(addr);
+    assert(index == 0);
     uint32_t tag = addr_to_tag(addr);
 
     for(i = 0; i < n_ways; i++) {

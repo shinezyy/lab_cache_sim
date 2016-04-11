@@ -16,9 +16,9 @@ using namespace std;
 // override read and write
 
 class victim_cache : public cache {
-    protected:
-        void invalidate_a_line(uint32_t addr); // this line must be in victim cache
     public:
+        victim_cache(uint32_t size, uint32_t line_size, uint32_t assoc, bool en_lru):
+            cache(size, line_size, assoc, en_lru) {}
         bool write(uint32_t addr, bool cmp, uint32_t *victim);
         bool read(uint32_t addr);
 };
@@ -38,7 +38,24 @@ bool victim_cache :: read(uint32_t addr) {
     }
 }
 
-void victim_cache :: invalidate_a_line(uint32_t addr) {
+uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
+uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
+uint64_t n_vc_hit, n_vc_miss;
+uint64_t mem_r, mem_w;
+
+void counter_init(){
+    l1_r_hit = 0;
+    l1_w_hit = 0;
+    l1_r_miss = 0;
+    l1_w_miss = 0;
+    l2_r_hit = 0;
+    l2_w_hit = 0;
+    l2_r_miss = 0;
+    l2_w_miss = 0;
+    n_vc_hit = 0;
+    n_vc_miss = 0;
+    mem_r = 0;
+    mem_w = 0;
 }
 
 #define swap_line() \
@@ -49,7 +66,7 @@ void victim_cache :: invalidate_a_line(uint32_t addr) {
         }\
     }while(0)
 
-uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2, 
+uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2, 
         vector<char *> *v_trace) { // return cycles
     uint32_t i;
     uint64_t all_cycles = 0;
@@ -72,12 +89,20 @@ uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2,
         bool l1_miss = false;
         if(load) {
             if(!c1->read(addr)) { // miss
+                l1_r_miss += 1;
                 l1_miss = true;
+            }
+            else {
+                l1_r_hit += 1;
             }
         }
         else { // store 
             if(!c1->write(addr, true, nullptr)) { // miss
                 l1_miss = true;
+                l1_w_miss = 1;
+            }
+            else {
+                l1_w_hit += 1;
             }
         }
 
@@ -96,12 +121,14 @@ uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2,
         }
 
         if(!vc_miss) {
+            n_vc_hit += 1;
             // swap two lines between victim cache and L1 cache
             // In reality, during a write cycle, we need one more cycle to write to 
             // newly loaded line in L1 cache, which was emitted here
             swap_line();
             continue;
         }
+        n_vc_miss += 1;
 
         // victim cache miss :
         // L2 cache :
@@ -111,11 +138,19 @@ uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2,
         if(load) {
             if(!c2->read(addr)) { // miss
                 l2_miss = true;
+                l2_r_miss += 1;
+            }
+            else {
+                l2_r_hit += 1;
             }
         }
         else { // store
             if(!c2->write(addr, true, nullptr)) { // miss
                 l2_miss = true;
+                l2_w_miss += 1;
+            }
+            else {
+                l2_w_hit += 1;
             }
         }
 
@@ -125,6 +160,12 @@ uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2,
         }
 
         // L2 miss :
+        if (load) {
+            mem_r += 1;
+        }
+        else {
+            mem_w += 1;
+        }
         all_cycles += OC_LTC;
         c2->write(addr, false, nullptr);
         swap_line();
@@ -137,13 +178,19 @@ void test_L1_L2_vict() {
 
     cout << "Testing L1 + L2 + victim cache:\n";
     cache *c1 = new cache(32 << 10, 32, 4, true); 
-    cache *vc = new cache(1 << 10, 32, -1, true); 
+    victim_cache *vc = new victim_cache(1 << 10, 32, -1, true); 
     cache *c2 = new cache(2 << 20, 128, 8, true); 
     for(i = 0; i < trace_files.size(); i++) {
+        counter_init();
         c1->invalidate_all();
         vc->invalidate_all();
         c2->invalidate_all();
-        cout << "cycles of " << trace_files[i] << ":\n";
-        cout << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
+        cout << trace_files[i] << ":\n";
+        cout << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
+        cout << "L1 hit: " << l1_r_hit + l1_w_hit 
+            << ", miss: " << l1_r_miss + l1_w_miss << endl;
+        cout << "L2 hit: " << l2_r_hit + l2_w_hit 
+            << ", miss: " << l2_r_miss + l2_w_miss << endl;
+        cout << "victim cache hit: " << n_vc_hit << "miss: " << n_vc_miss << endl;
     }
 }
