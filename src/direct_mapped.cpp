@@ -67,5 +67,7 @@ uint32_t cache_direct_map :: get_tag(uint32_t addr) {
     return tag_col->read(addr);
 }
 
-
-
+uint32_t cache_direct_map :: get_valid(uint32_t addr) {
+    assert(addr < n_raws);
+    return valid_col->read(addr);
+}

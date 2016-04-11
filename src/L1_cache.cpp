@@ -18,11 +18,6 @@ uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
     uint32_t trace_size = v_trace->size();
     for(i = 0; i < trace_size; i++) {
         uint32_t load, addr, n_cycles;
-
-        if(strlen((*v_trace)[i]) <= 1) {
-            return all_cycles;
-        }
-
         vector<int> *ret = str_to_addr((*v_trace)[i]);
         // unpack return val :
         load = (*ret)[0];
