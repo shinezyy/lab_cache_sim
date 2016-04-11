@@ -62,6 +62,7 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         }
 
         if(!l2_miss) {
+            c1->write(addr, false, nullptr);
             continue;
         }
 
@@ -76,7 +77,7 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
 void test_L1_L2() {
     unsigned int i;
 
-    cout << "Testing c1:\n";
+    cout << "Testing L1 + L2:\n";
     cache *c1 = new cache(32 << 10, 32, 4, true); 
     cache *c2 = new cache(2 << 20, 128, 8, true); 
     for(i = 0; i < trace_files.size(); i++) {

@@ -135,8 +135,7 @@ uint64_t benchmark_L1_L2_vict(cache *c1, cache *vc, cache *c2,
 void test_L1_L2_vict() {
     unsigned int i;
 
-
-    cout << "Testing c1:\n";
+    cout << "Testing L1 + L2 + victim cache:\n";
     cache *c1 = new cache(32 << 10, 32, 4, true); 
     cache *vc = new cache(1 << 10, 32, -1, true); 
     cache *c2 = new cache(2 << 20, 128, 8, true); 
