@@ -22,8 +22,8 @@ class cache {
 
     public:
         cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru);
-        bool write(uint32_t addr, bool cmp, uint32_t *victim);
-        bool read(uint32_t addr);
+        virtual bool write(uint32_t addr, bool cmp, uint32_t *victim);
+        virtual bool read(uint32_t addr);
         void invalidate_all();
 };
 
