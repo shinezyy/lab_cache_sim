@@ -15,6 +15,7 @@ cache_direct_map :: cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t 
 }
 
 bool cache_direct_map :: match(uint32_t tag_in, uint32_t addr) {
+    assert(addr < n_raws);
     uint32_t valid = valid_col->read(addr);
     uint32_t tag_match = tag_col->read(addr) == tag_in;
     if(valid & tag_match) {
@@ -36,6 +37,7 @@ void cache_direct_map :: invalidate_all() {
 }
 
 void cache_direct_map :: write(uint32_t tag_in, uint32_t addr) {
+    assert(addr < n_raws);
     tag_col->write(addr, tag_in);
     valid_col->write(addr, 1); // 1 for valid
     if(age_col != nullptr) {
@@ -55,6 +57,7 @@ void cache_direct_map :: time_pass_by() {
 }
 
 uint32_t cache_direct_map :: get_recent_use(uint32_t addr) {
+    assert(addr < n_raws);
     assert(age_col != nullptr);
     return age_col->read(addr);
 }

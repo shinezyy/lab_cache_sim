@@ -1,5 +1,6 @@
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <vector>
 
 using namespace std;
@@ -23,7 +24,9 @@ vector<char *> *get_trace(string& trace_file_name) {
     while(!infile.eof()) {
         char *str = new char[20];
         infile.getline(str, 20);
-        ret->push_back(str);
+        if(strlen(str) >= 10) {
+            ret->push_back(str);
+        }
     }
     return ret;
 }
