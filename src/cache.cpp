@@ -65,38 +65,52 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         return false;
     }
     else { // replacement
-        uint32_t victim_idx = 0;
-        if(lru) {
-            uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
-            uint32_t min_idx = 0;
-            uint32_t i;
-            for(i = 1; i < simple_cache.size(); i++) {
-                if(simple_cache[i]->get_recent_use(addr_to_index(addr)) < min) {
-                    min = simple_cache[i]->get_recent_use(addr_to_index(addr));
-                    min_idx = i;
+        uint32_t victim_idx = ~0;
+        uint32_t n_ways = simple_cache.size();
+        uint32_t i;
+
+        // find invalid line :
+        for(i = 0; i < n_ways; i++) {
+            if(!simple_cache[i]->get_valid(addr_to_index(addr))) {
+                victim_idx = i;
+                break;
+            }
+        }
+
+        if(i == n_ways) { // invalid line not found :
+            if(lru) {
+                uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
+                uint32_t min_idx = 0;
+                for(i = 1; i < n_ways; i++) {
+                    if(simple_cache[i]->get_recent_use(addr_to_index(addr)) < min) {
+                        min = simple_cache[i]->get_recent_use(addr_to_index(addr));
+                        min_idx = i;
+                    }
                 }
+                victim_idx = min_idx;
             }
-            victim_idx = min_idx;
-        }
-        else {
-            rand_sel += 1;
-            if(rand_sel >= simple_cache.size()){
-                rand_sel -= simple_cache.size();
+            else {
+                rand_sel += 1;
+                if(rand_sel >= n_ways){
+                    rand_sel -= n_ways;
+                }
+                victim_idx = rand_sel;
             }
-            victim_idx = rand_sel;
         }
+
+        // do replacement
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
-        simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
         if(victim != nullptr) {
             if(!victim_valid) {
                 *victim = 0;
             }
             else {
-                uint32_t victim_tag = simple_cache[rand_sel]->get_tag(addr_to_index(addr));
+                uint32_t victim_tag = simple_cache[victim_idx]->get_tag(addr_to_index(addr));
                 *victim = (victim_tag << (index_width + offset_width))
                     | (victim_idx << index_width);
             }
         }
+        simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
 
         return true;
     }
@@ -125,7 +139,8 @@ bool cache :: read(uint32_t addr) {
 
 void cache :: invalidate_all() {
     uint32_t i;
-    for(i = 0; i < simple_cache.size(); i++) {
+    uint32_t n_ways = simple_cache.size();
+    for(i = 0; i < n_ways; i++) {
         simple_cache[i]->invalidate_all();
     }
 }
