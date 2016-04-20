@@ -30,6 +30,8 @@ static void counter_init(){
     mem_w = 0;
 }
 
+int print_count = 0;
+
 uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // return cycles
     uint32_t i;
     uint64_t all_cycles = 0;
@@ -109,7 +111,12 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         }
         all_cycles += OC_LTC; // fetch from mem
         c2->write(addr, false, nullptr); // load block
-        c1->write(addr, false, nullptr); // inclusive design
+        uint32_t victim = 0;
+        c1->write(addr, false, &victim); // inclusive design
+        if (print_count++ < 10000) {
+            log_var(victim);
+            log_var(addr);
+        }
     }
     return all_cycles;
 }

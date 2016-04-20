@@ -77,11 +77,13 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             }
         }
 
+        printf("start looking for lru-----------------------------------\n");
         if(i == n_ways) { // invalid line not found :
             if(lru) {
                 uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
                 uint32_t min_idx = 0;
                 for(i = 1; i < n_ways; i++) {
+                    printf("RU: %d\n", simple_cache[i]->get_recent_use(addr_to_index(addr))); 
                     if(simple_cache[i]->get_recent_use(addr_to_index(addr)) < min) {
                         min = simple_cache[i]->get_recent_use(addr_to_index(addr));
                         min_idx = i;
@@ -97,10 +99,11 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
                 victim_idx = rand_sel;
             }
         }
+        printf("found lru-----------------------------------\n");
 
         // do replacement
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
-        if(victim != nullptr) {
+        if(victim != nullptr) { // set victim to nullptr to indicate it is not requsted
             if(!victim_valid) {
                 *victim = 0;
             }

@@ -10,11 +10,11 @@ using namespace std;
 string file_dir = "./traces/";
 
 vector<string> trace_files = {
-    "gcc.trace",
-    "gzip.trace",
-    "mcf.trace",
-    "swim.trace",
-    "twolf.trace"
+    //"gcc.trace",
+    //"mcf.trace",
+    //"swim.trace",
+    //"twolf.trace",
+    "gzip.trace"
 };
 
 vector<char *> *get_trace(string& trace_file_name) {
