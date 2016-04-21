@@ -14,6 +14,7 @@ class cache {
         uint32_t rand_sel; 
         uint32_t tag_width, index_width, offset_width;
         bool lru;
+        bool is_victim_cache;
 
     protected:
         uint32_t addr_to_tag(uint32_t addr);
@@ -21,7 +22,8 @@ class cache {
         void invalidate_a_line(uint32_t addr);
 
     public:
-        cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru);
+        //cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru);
+        cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bool is_v=false);
         virtual bool write(uint32_t addr, bool cmp, uint32_t *victim);
         virtual bool read(uint32_t addr);
         void invalidate_all();

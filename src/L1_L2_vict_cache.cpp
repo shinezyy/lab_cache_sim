@@ -20,7 +20,7 @@ extern bool verbose;
 class victim_cache : public cache {
     public:
         victim_cache(uint32_t size, uint32_t line_size, uint32_t assoc, bool en_lru):
-            cache(size, line_size, assoc, en_lru) {}
+            cache(size, line_size, assoc, en_lru, true) {}
         bool write(uint32_t addr, bool cmp, uint32_t *victim);
         bool read(uint32_t addr);
 };
@@ -124,9 +124,11 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
         bool vc_miss = false;
 
         // L1 cache read from victim cache, but not write to it directly
+        verbose = true;
         if(!vc->read(addr)) { // miss
             vc_miss = true;
         }
+        verbose = false;
 
         if(!vc_miss) {
             n_vc_hit += 1;
