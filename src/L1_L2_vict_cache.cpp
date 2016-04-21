@@ -124,7 +124,7 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
             n_vc_hit += 1;
             // swap two lines between victim cache and L1 cache
             // In reality, during a write cycle, we need one more cycle to write to 
-            // newly loaded line in L1 cache, which was emitted here
+            // newly loaded line in L1 cache, which was omitted here
             swap_line();
             continue;
         }
