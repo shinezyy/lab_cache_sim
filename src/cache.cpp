@@ -79,7 +79,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             }
         }
 
-        print_cond("start looking for lru-----------------------------------\n");
+        //print_cond("start looking for lru-----------------------------------\n");
         if(i == n_ways) { // invalid line not found :
             if(lru) {
                 uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
@@ -105,7 +105,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             print_cond("found inv line\n");
         }
         print_cond("victim_idx: 0x%x\n\n",victim_idx);
-        print_cond("found lru-----------------------------------\n");
+        //print_cond("found lru-----------------------------------\n");
 
         print_cond("----tags before replacement----\n");
         for(i = 0; i < n_ways; i++) {
@@ -115,6 +115,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
         if(victim != nullptr) { // set victim to nullptr to indicate it is not requsted
             if(!victim_valid) {
+                print_cond("victim invalid\n");
                 *victim = 0;
             }
             else {
