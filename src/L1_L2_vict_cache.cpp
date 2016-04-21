@@ -62,7 +62,6 @@ static void counter_init(){
 
 #define swap_line() \
     do {\
-        verbose = true;\
         print_cond("---- L1 cache begin ----\n");\
         c1->write(addr, false, &victim_addr_from_l1);\
         print_cond("---- L1 cache end ----\n\n");\
@@ -71,7 +70,6 @@ static void counter_init(){
             vc->write(victim_addr_from_l1, false, nullptr);\
             print_cond("---- victim cache end ----\n\n");\
         }\
-        verbose = false;\
     }while(0)
 
 uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2, 
@@ -124,11 +122,9 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
         bool vc_miss = false;
 
         // L1 cache read from victim cache, but not write to it directly
-        verbose = true;
         if(!vc->read(addr)) { // miss
             vc_miss = true;
         }
-        verbose = false;
 
         if(!vc_miss) {
             n_vc_hit += 1;

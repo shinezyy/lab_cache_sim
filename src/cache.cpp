@@ -55,7 +55,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bo
 bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
     if(cmp) {
         for(auto it = simple_cache.begin(); it != simple_cache.end(); it++) {
-            (*it)->time_pass_by();
+            (*it)->time_pass_by(addr_to_index(addr));
         }
 
         for(auto it = simple_cache.begin(); it != simple_cache.end(); it++) {
@@ -122,7 +122,6 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
 
         print_cond("----tags before replacement----\n");
         for(i = 0; i < n_ways; i++) {
-            fflush(stdout);
             print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
         }
         // do replacement
@@ -161,7 +160,7 @@ uint32_t cache :: addr_to_index(uint32_t addr) {
 
 bool cache :: read(uint32_t addr) {
     for(auto it = simple_cache.begin(); it != simple_cache.end(); it++) {
-        (*it)->time_pass_by();
+        (*it)->time_pass_by(addr_to_index(addr));
     }
     for(auto it = simple_cache.begin(); it != simple_cache.end(); it++) {
         if((*it)->match(addr_to_tag(addr), addr_to_index(addr))) {
@@ -195,5 +194,3 @@ void cache :: invalidate_a_line(uint32_t addr) {
     }
     assert(0);
 }
-
-

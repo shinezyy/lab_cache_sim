@@ -22,7 +22,7 @@ class cache_direct_map {
 
         void write(uint32_t tag_in, uint32_t addr);
 
-        void time_pass_by();
+        void time_pass_by(uint32_t addr);
 
         uint32_t get_recent_use(uint32_t addr);
 

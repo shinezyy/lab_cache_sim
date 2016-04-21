@@ -58,13 +58,11 @@ void cache_direct_map :: write(uint32_t tag_in, uint32_t addr) {
     }
 }
 
-void cache_direct_map :: time_pass_by() {
+void cache_direct_map :: time_pass_by(uint32_t addr) {
+    assert(addr < n_raws);
     if(age_col != nullptr){
-        uint32_t i;
-        for(i = 0; i < n_raws; i++) {
-            if(valid_col->read(i) && age_col->read(i)) { // > 0 and valid
-                age_col->write(i, age_col->read(i) - 1);
-            }
+        if(valid_col->read(addr) && age_col->read(addr)) { // > 0 and valid
+            age_col->write(addr, age_col->read(addr) - 1);
         }
     }
 }
