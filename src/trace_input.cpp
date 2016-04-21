@@ -2,6 +2,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <cassert>
 
 using namespace std;
 
@@ -11,15 +12,16 @@ string file_dir = "./traces/";
 
 vector<string> trace_files = {
     "gcc.trace",
-    "gzip.trace",
     "mcf.trace",
     "swim.trace",
-    "twolf.trace"
+    "twolf.trace",
+    "gzip.trace"
 };
 
 vector<char *> *get_trace(string& trace_file_name) {
     ifstream infile;
     infile.open(file_dir + trace_file_name);
+    assert(infile.is_open());
     vector<char *> *ret = new vector<char *>;
     while(!infile.eof()) {
         char *str = new char[20];

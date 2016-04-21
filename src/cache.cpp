@@ -4,6 +4,8 @@
 
 using namespace std;
 
+extern bool verbose;
+
 static uint32_t log2(uint32_t x) {
     if(x != 1) {
         return 1 + log2(x >> 1);
@@ -77,11 +79,13 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             }
         }
 
+        print_cond("start looking for lru-----------------------------------\n");
         if(i == n_ways) { // invalid line not found :
             if(lru) {
                 uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
                 uint32_t min_idx = 0;
                 for(i = 1; i < n_ways; i++) {
+                    print_cond("RU: %d\n", simple_cache[i]->get_recent_use(addr_to_index(addr))); 
                     if(simple_cache[i]->get_recent_use(addr_to_index(addr)) < min) {
                         min = simple_cache[i]->get_recent_use(addr_to_index(addr));
                         min_idx = i;
@@ -97,10 +101,19 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
                 victim_idx = rand_sel;
             }
         }
+        else {
+            print_cond("found inv line\n");
+        }
+        print_cond("victim_idx: 0x%x\n\n",victim_idx);
+        print_cond("found lru-----------------------------------\n");
 
+        print_cond("----tags before replacement----\n");
+        for(i = 0; i < n_ways; i++) {
+            print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
+        }
         // do replacement
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
-        if(victim != nullptr) {
+        if(victim != nullptr) { // set victim to nullptr to indicate it is not requsted
             if(!victim_valid) {
                 *victim = 0;
             }
@@ -111,6 +124,12 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             }
         }
         simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
+        print_cond("tag new: 0x%x\n", addr_to_tag(addr));
+        print_cond("index: 0x%x\n", addr_to_index(addr));
+        print_cond("----tags after replacement----\n");
+        for(i = 0; i < n_ways; i++) {
+            print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
+        }
 
         return true;
     }

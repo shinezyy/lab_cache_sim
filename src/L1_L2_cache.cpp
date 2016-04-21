@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <cstdio>
+#include <cassert>
 
 #include "debug.h"
 #include "cache.h"
@@ -12,6 +13,7 @@
 
 using namespace std;
 
+bool verbose = false;
 
 static uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
 static uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
@@ -29,6 +31,8 @@ static void counter_init(){
     mem_r = 0;
     mem_w = 0;
 }
+
+int print_count = 0;
 
 uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // return cycles
     uint32_t i;
@@ -109,7 +113,12 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         }
         all_cycles += OC_LTC; // fetch from mem
         c2->write(addr, false, nullptr); // load block
-        c1->write(addr, false, nullptr); // inclusive design
+
+        uint32_t victim = 0;
+
+        c1->write(addr, false, &victim); // inclusive design
+
+        assert(c1->read(addr));
     }
     return all_cycles;
 }
