@@ -42,7 +42,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bo
     index_width = log2(n_raws_in_way);
     offset_width = log2(line_size);
     tag_width = BUS_WIDTH - index_width - offset_width;
-    
+
     // init members
     rand_sel = 0;
     uint32_t i;
@@ -134,7 +134,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             else {
                 uint32_t victim_tag = simple_cache[victim_idx]->get_tag(addr_to_index(addr));
                 *victim = (victim_tag << (index_width + offset_width))
-                    | (victim_idx << index_width);
+                    | (addr_to_index(addr) << offset_width);
             }
         }
         simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
