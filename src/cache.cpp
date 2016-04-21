@@ -104,8 +104,13 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         else {
             print_cond("found inv line\n");
         }
+        print_cond("victim_idx: 0x%x\n\n",victim_idx);
         print_cond("found lru-----------------------------------\n");
 
+        print_cond("----tags before replacement----\n");
+        for(i = 0; i < n_ways; i++) {
+            print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
+        }
         // do replacement
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
         if(victim != nullptr) { // set victim to nullptr to indicate it is not requsted
@@ -119,6 +124,12 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
             }
         }
         simple_cache[victim_idx]->write(addr_to_tag(addr), addr_to_index(addr));
+        print_cond("tag new: 0x%x\n", addr_to_tag(addr));
+        print_cond("index: 0x%x\n", addr_to_index(addr));
+        print_cond("----tags after replacement----\n");
+        for(i = 0; i < n_ways; i++) {
+            print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
+        }
 
         return true;
     }

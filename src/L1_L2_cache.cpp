@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <cstdio>
+#include <cassert>
 
 #include "debug.h"
 #include "cache.h"
@@ -115,16 +116,9 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
 
         uint32_t victim = 0;
 
-        printf("L1 starting---------------------------------\n");
-        verbose = true;
         c1->write(addr, false, &victim); // inclusive design
-        verbose = false;
-        printf("L1 ending---------------------------------\n");
 
-        if (print_count++ < 10000) {
-            log_var(victim);
-            log_var(addr);
-        }
+        assert(c1->read(addr));
     }
     return all_cycles;
 }
