@@ -5,7 +5,7 @@
 #include <cstdint>
 #include "direct_mapped.h"
 
-#define LRU_LEN 4
+#define LRU_LEN 8
 #define BUS_WIDTH 32
 
 class cache {
