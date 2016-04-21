@@ -98,7 +98,7 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
                 uint32_t min = simple_cache[0]->get_recent_use(addr_to_index(addr));
                 uint32_t min_idx = 0;
                 for(i = 1; i < n_ways; i++) {
-                    print_cond("RU: %d\n", simple_cache[i]->get_recent_use(addr_to_index(addr))); 
+                    //print_cond("RU: %d\n", simple_cache[i]->get_recent_use(addr_to_index(addr))); 
                     if(simple_cache[i]->get_recent_use(addr_to_index(addr)) < min) {
                         min = simple_cache[i]->get_recent_use(addr_to_index(addr));
                         min_idx = i;

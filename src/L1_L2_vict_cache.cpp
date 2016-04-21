@@ -65,11 +65,13 @@ static void counter_init(){
         print_cond("---- L1 cache begin ----\n");\
         c1->write(addr, false, &victim_addr_from_l1);\
         print_cond("---- L1 cache end ----\n\n");\
+        verbose = true;\
         if(victim_addr_from_l1) { \
             print_cond("---- victim cache begin ----\n");\
             vc->write(victim_addr_from_l1, false, nullptr);\
             print_cond("---- victim cache end ----\n\n");\
         }\
+        verbose = false;\
     }while(0)
 
 uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2, 
