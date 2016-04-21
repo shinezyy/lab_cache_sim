@@ -19,7 +19,7 @@ static uint32_t log2(uint32_t x) {
 cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bool is_v) {
     uint32_t age_width, n_raws_all, n_ways, n_raws_in_way;
     //uint32_t offset_width, index_width, tag_width;
-    is_victim_cache = false;
+    is_victim_cache = is_v;
     if(en_lru) { 
         age_width = LRU_LEN;
         lru = true;
@@ -70,8 +70,6 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         uint32_t victim_idx = ~0;
         uint32_t n_ways = simple_cache.size();
         uint32_t i;
-        log();
-        /*
         bool already_exist = false; // the expected line is already in the cache
                                     // which is only allowed in victim cache
         for(i = 0; i < n_ways; i++) {
@@ -79,12 +77,13 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
                 already_exist = true;
             }
         }
-        log();
         if (already_exist) {
-            assert(is_victim_cache);
+            if(!is_victim_cache) {
+                print_cond("addr: 0x%x\n", addr);
+                exit(0);
+            }
             return true;
         }
-        */
         // find invalid line :
         for(i = 0; i < n_ways; i++) {
             if(!simple_cache[i]->get_valid(addr_to_index(addr))) {
@@ -122,16 +121,12 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         //print_cond("found lru-----------------------------------\n");
 
         print_cond("----tags before replacement----\n");
-        log();
-        log_var(n_ways);
         for(i = 0; i < n_ways; i++) {
             fflush(stdout);
             print_cond("0x%x\n", simple_cache[i]->get_tag(addr_to_index(addr)));
         }
-        log();
         // do replacement
         uint32_t victim_valid = simple_cache[victim_idx]->get_valid(addr_to_index(addr));
-        log();
         if(victim != nullptr) { // set victim to nullptr to indicate it is not requsted
             if(!victim_valid) {
                 print_cond("victim invalid\n");
