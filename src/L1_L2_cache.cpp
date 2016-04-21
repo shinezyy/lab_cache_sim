@@ -12,6 +12,7 @@
 
 using namespace std;
 
+bool verbose = false;
 
 static uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
 static uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
@@ -111,8 +112,15 @@ uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // ret
         }
         all_cycles += OC_LTC; // fetch from mem
         c2->write(addr, false, nullptr); // load block
+
         uint32_t victim = 0;
+
+        printf("L1 starting---------------------------------\n");
+        verbose = true;
         c1->write(addr, false, &victim); // inclusive design
+        verbose = false;
+        printf("L1 ending---------------------------------\n");
+
         if (print_count++ < 10000) {
             log_var(victim);
             log_var(addr);

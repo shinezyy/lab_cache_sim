@@ -14,4 +14,11 @@
         log("variable " #x " is 0x%x", x);\
     }while(0)
 
+#define print_cond(format,...)    \
+    do {\
+        if (verbose) {\
+            printf(format , ##__VA_ARGS__);\
+        }\
+    } while(0)
+
 #endif

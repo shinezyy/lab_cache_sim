@@ -21,7 +21,7 @@ bool cache_direct_map :: match(uint32_t tag_in, uint32_t addr) {
     if(valid & tag_match) {
         if(age_col != nullptr) {
             age_col->write(addr, ~0);
-            printf("recent use: %u\n", get_recent_use(addr));
+            //printf("recent use: %u\n", get_recent_use(addr));
         }
         return true;
     }
