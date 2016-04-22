@@ -27,7 +27,9 @@ class victim_cache : public cache {
 
 bool victim_cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
     assert(cmp == false);
-    return cache::write(addr, cmp, victim);
+    cache :: write(addr, cmp, victim);
+    assert(cache :: read(addr));
+    return true;
 }
 
 bool victim_cache :: read(uint32_t addr) {
