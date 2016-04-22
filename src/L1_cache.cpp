@@ -47,8 +47,8 @@ uint64_t benchmark_L1(cache *c, vector<char *> *v_trace) { // return cycles
 void test_L1() {
     unsigned int i;
 
-
-    cout << "Testing c1:\n";
+    cout << "========================================\n";
+    cout << "Testing L1 c1:\n";
     cache *c1 = new cache(64 << 10, 8, 1, false); 
     for(i = 0; i < trace_files.size(); i++) {
         c1->invalidate_all();
@@ -56,7 +56,7 @@ void test_L1() {
         cout << benchmark_L1(c1, get_trace(trace_files[i])) << endl;
     }
 
-    cout << "Testing c2:\n";
+    cout << "Testing L1 c2:\n";
     cache *c2 = new cache(32 << 10, 32, 4, true); 
     for(i = 0; i < trace_files.size(); i++) {
         c2->invalidate_all();
@@ -64,7 +64,7 @@ void test_L1() {
         cout << benchmark_L1(c2, get_trace(trace_files[i])) << endl;
     }
 
-    cout << "Testing c3:\n";
+    cout << "Testing L1 c3:\n";
     cache *c3 = new cache(8 << 10, 64, -1, false); 
     for(i = 0; i < trace_files.size(); i++) {
         c3->invalidate_all();
