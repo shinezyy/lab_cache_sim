@@ -49,9 +49,11 @@ void test_fin() {
 }
 
 extern void test_L1_L2_vict();
+extern void test_L1_L2();
 
 int main() {
     test_L1_L2_vict();
+    test_L1_L2();
     //test_fin();
     //test_cache();
     //test_direct_map_cache_mem();
