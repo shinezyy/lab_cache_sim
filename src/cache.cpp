@@ -16,10 +16,9 @@ static uint32_t log2(uint32_t x) {
 }
 
 // count in byte
-cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bool is_v) {
+cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru) {
     uint32_t age_width, n_rows_all, n_ways, n_rows_in_way;
     //uint32_t offset_width, index_width, tag_width;
-    is_victim_cache = is_v;
     if(en_lru) { 
         age_width = LRU_LEN;
         lru = true;

@@ -20,7 +20,7 @@ extern bool verbose;
 class victim_cache : public cache {
     public:
         victim_cache(uint32_t size, uint32_t line_size, uint32_t assoc, bool en_lru):
-            cache(size, line_size, assoc, en_lru, true) {}
+            cache(size, line_size, assoc, en_lru) {}
         bool write(uint32_t addr, bool cmp, uint32_t *victim);
         bool read(uint32_t addr);
         void invalidate_a_line(uint32_t addr);
