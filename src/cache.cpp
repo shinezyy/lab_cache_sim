@@ -17,7 +17,7 @@ static uint32_t log2(uint32_t x) {
 
 // count in byte
 cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bool is_v) {
-    uint32_t age_width, n_raws_all, n_ways, n_raws_in_way;
+    uint32_t age_width, n_rows_all, n_ways, n_rows_in_way;
     //uint32_t offset_width, index_width, tag_width;
     is_victim_cache = is_v;
     if(en_lru) { 
@@ -29,17 +29,17 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bo
         lru = false;
     }
 
-    n_raws_all = size/line_size;
+    n_rows_all = size/line_size;
 
     if(assoc == -1) { //fully
-        n_ways = n_raws_all;
+        n_ways = n_rows_all;
     }
     else {
         n_ways = assoc;
     }
-    n_raws_in_way = n_raws_all / n_ways; // 1 for fully assoc...
+    n_rows_in_way = n_rows_all / n_ways; // 1 for fully assoc...
 
-    index_width = log2(n_raws_in_way);
+    index_width = log2(n_rows_in_way);
     offset_width = log2(line_size);
     tag_width = BUS_WIDTH - index_width - offset_width;
 
@@ -47,7 +47,7 @@ cache :: cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru, bo
     rand_sel = 0;
     uint32_t i;
     for(i = 0; i < n_ways; i++) {
-        simple_cache.push_back(new cache_direct_map(tag_width, n_raws_in_way, age_width));
+        simple_cache.push_back(new cache_direct_map(tag_width, n_rows_in_way, age_width));
         simple_cache[i]->invalidate_all();
     }
 }

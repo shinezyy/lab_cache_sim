@@ -9,10 +9,10 @@ class mem_object {
     private:
         std::vector<uint32_t> *mem;
         uint32_t mask;
-        uint32_t n_columns, n_raws; // number of columns and raws
+        uint32_t n_columns, n_rows; // number of columns and rows
 
     public:
-        mem_object(int n_col, int n_raw);
+        mem_object(int n_col, int n_row);
 
         uint32_t read(uint32_t addr);
 

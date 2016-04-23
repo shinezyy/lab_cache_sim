@@ -9,10 +9,10 @@ class cache_direct_map {
         mem_object *valid_col;
         mem_object *tag_col;
         mem_object *age_col;
-        uint32_t n_raws;
+        uint32_t n_rows;
 
     public:
-        cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width);// number of raws
+        cache_direct_map(uint32_t tag_width, uint32_t n_r, uint32_t age_width);// number of rows
 
         bool match(uint32_t tag_in, uint32_t addr);
 
