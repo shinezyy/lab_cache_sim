@@ -28,6 +28,15 @@ class victim_cache : public cache {
 
 bool victim_cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
     assert(cmp == false);
+    uint32_t n_ways = simple_cache.size();
+    uint32_t i;
+    for(i = 0; i < n_ways; i++) {
+        if(simple_cache[i]->match_without_aging(addr_to_tag(addr),addr_to_index(addr))) {
+            // the expected line is already in the cache
+            // which is only allowed in victim cache
+            return true;
+        }
+    }
     cache :: write(addr, cmp, victim);
     assert(cache :: read(addr));
     return true;

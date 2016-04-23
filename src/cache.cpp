@@ -70,20 +70,6 @@ bool cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
         uint32_t victim_idx = ~0;
         uint32_t n_ways = simple_cache.size();
         uint32_t i;
-        bool already_exist = false; // the expected line is already in the cache
-                                    // which is only allowed in victim cache
-        for(i = 0; i < n_ways; i++) {
-            if(simple_cache[i]->match_without_aging(addr_to_tag(addr),addr_to_index(addr))) {
-                already_exist = true;
-            }
-        }
-        if (already_exist) {
-            if(!is_victim_cache) {
-                print_cond("addr: 0x%x\n", addr);
-                exit(0);
-            }
-            return true;
-        }
         // find invalid line :
         for(i = 0; i < n_ways; i++) {
             if(!simple_cache[i]->get_valid(addr_to_index(addr))) {
