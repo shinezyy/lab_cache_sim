@@ -74,6 +74,9 @@ static uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
 static uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;
 static uint64_t n_vc_hit, n_vc_miss;
 static uint64_t mem_r, mem_w;
+static uint64_t l1_r, l1_w;
+static uint64_t l2_r, l2_w;
+static uint64_t vc_r, vc_w;
 
 static void counter_init(){
     l1_r_hit = 0;
@@ -88,6 +91,12 @@ static void counter_init(){
     n_vc_miss = 0;
     mem_r = 0;
     mem_w = 0;
+    l1_r = 0;
+    l1_w = 0;
+    l2_r = 0;
+    l2_w = 0;
+    vc_r = 0;
+    vc_w = 0;
 }
 
 #define swap_line() \
@@ -122,41 +131,39 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
 
         // L1 cache :
         all_cycles += L1_LTC;
-        bool l1_miss = false;
         if(load) {
+            l1_r += 1;
             if(!c1->read(addr)) { // miss
                 l1_r_miss += 1;
-                l1_miss = true;
             }
             else {
                 l1_r_hit += 1;
+                continue;
             }
         }
         else { // store 
+            l1_w += 1;
             if(!c1->write(addr, true, nullptr)) { // miss
-                l1_miss = true;
                 l1_w_miss += 1;
             }
             else {
                 l1_w_hit += 1;
+                continue;
             }
-        }
-
-        if(!l1_miss) {
-            continue;
         }
 
         // L1 miss :
         // victim cache :
         all_cycles += VIC_LTC;
-        bool vc_miss = false;
+        vc_r += 1;
+        bool vc_hit = false;
 
         // L1 cache read from victim cache, but not write to it directly
-        if(!vc->read(addr)) { // miss
-            vc_miss = true;
+        if(vc->read(addr)) { // miss
+            vc_hit = true;
         }
 
-        if(!vc_miss) {
+        if(vc_hit) {
             n_vc_hit += 1;
             // swap two lines between victim cache and L1 cache
             // In reality, during a write cycle, we need one more cycle to write to 
@@ -172,6 +179,7 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
         bool l2_miss = false;
 
         if(load) {
+            l2_r += 1;
             if(!c2->read(addr)) { // miss
                 l2_r_miss += 1;
                 l2_miss = true;
@@ -181,6 +189,7 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
             }
         }
         else { // store
+            l2_w += 1;
             if(!c2->write(addr, true, nullptr)) { // miss
                 l2_miss = true;
                 l2_w_miss += 1;
@@ -223,6 +232,7 @@ void test_L1_L2_vict() {
         vc->invalidate_all();
         c2->invalidate_all();
         cout << trace_files[i] << "-------------------------------------------\n";
+        cout << "number of l1 cache accesses: " << l1_r << endl;
         cout << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
         cout << "L1 hit: " << l1_r_hit + l1_w_hit 
             << ", miss: " << l1_r_miss + l1_w_miss << endl;
