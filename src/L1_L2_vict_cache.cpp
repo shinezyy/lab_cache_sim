@@ -23,6 +23,7 @@ class victim_cache : public cache {
             cache(size, line_size, assoc, en_lru, true) {}
         bool write(uint32_t addr, bool cmp, uint32_t *victim);
         bool read(uint32_t addr);
+        void invalidate_a_line(uint32_t addr);
 };
 
 bool victim_cache :: write(uint32_t addr, bool cmp, uint32_t *victim) {
@@ -41,6 +42,24 @@ bool victim_cache :: read(uint32_t addr) {
         return false;
     }
 }
+
+void victim_cache :: invalidate_a_line(uint32_t addr) {
+    uint32_t i;
+    uint32_t n_ways = simple_cache.size();
+    uint32_t index = addr_to_index(addr);
+    assert(index == 0);
+    uint32_t tag = addr_to_tag(addr);
+
+    for(i = 0; i < n_ways; i++) {
+        if(simple_cache[i]->match_without_aging(tag, index)) {
+            simple_cache[i]->invalidate_a_line(index);
+            print_cond("invalidated tag: 0x%x", addr_to_tag(addr));
+            return;
+        }
+    }
+    assert(0);
+}
+
 
 static uint64_t l1_r_hit, l1_w_hit, l1_r_miss, l1_w_miss;
 static uint64_t l2_r_hit, l2_w_hit, l2_r_miss, l2_w_miss;

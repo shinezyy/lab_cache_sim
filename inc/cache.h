@@ -10,16 +10,15 @@
 
 class cache {
     private: 
-        std :: vector<cache_direct_map *> simple_cache;
         uint32_t rand_sel; 
         uint32_t tag_width, index_width, offset_width;
         bool lru;
         bool is_victim_cache;
 
     protected:
+        std :: vector<cache_direct_map *> simple_cache;
         uint32_t addr_to_tag(uint32_t addr);
         uint32_t addr_to_index(uint32_t addr);
-        void invalidate_a_line(uint32_t addr);
 
     public:
         //cache(uint32_t size, uint32_t line_size, int32_t assoc, bool en_lru);

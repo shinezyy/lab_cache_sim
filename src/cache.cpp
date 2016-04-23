@@ -177,20 +177,3 @@ void cache :: invalidate_all() {
         simple_cache[i]->invalidate_all();
     }
 }
-
-void cache :: invalidate_a_line(uint32_t addr) {
-    uint32_t i;
-    uint32_t n_ways = simple_cache.size();
-    uint32_t index = addr_to_index(addr);
-    assert(index == 0);
-    uint32_t tag = addr_to_tag(addr);
-
-    for(i = 0; i < n_ways; i++) {
-        if(simple_cache[i]->match_without_aging(tag, index)) {
-            simple_cache[i]->invalidate_a_line(index);
-            print_cond("invalidated tag: 0x%x", addr_to_tag(addr));
-            return;
-        }
-    }
-    assert(0);
-}
