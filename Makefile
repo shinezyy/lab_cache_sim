@@ -11,12 +11,16 @@ CXXFLAGS = -O2 -Wall -Werror
 CXXFLAGS += -std=gnu++11
 CXXFLAGS += -I$(INC_DIR)
 
+
 cache.bin: $(OBJS)
 	$(CXX) $(OBJS) -o cache.bin
 
 $(OBJ_DIR)/%.obj: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $< $(CXXFLAGS) -c -o $@
+
+run: cache.bin
+	./cache.bin
 
 .PHONY: clean
 
