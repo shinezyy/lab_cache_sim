@@ -250,6 +250,7 @@ void test_L1_L2_vict() {
         ofs << l1_r + l1_w << ',';
         ofs << l1_r << ',';
         ofs << l1_w << ',';
+        cout << "L1 hit: " << l1_r_hit + l1_w_hit << endl;
         ofs << ((double)(l1_r_hit + l1_w_hit))/(l1_r + l1_w) << ',';
         ofs << ((double)l1_r_hit)/l1_r << ',';
         ofs << ((double)l1_w_hit)/l1_w;
@@ -259,6 +260,7 @@ void test_L1_L2_vict() {
         ofs << l2_r + l2_w << ',';
         ofs << l2_r << ',';
         ofs << l2_w << ',';
+        cout << "L2 hit: " << l2_r_hit + l2_w_hit << endl;
         ofs << ((double)(l2_r_hit + l2_w_hit))/(l2_r + l2_w) << ',';
         ofs << ((double)l2_r_hit)/l2_r << ',';
         ofs << ((double)l2_w_hit)/l2_w;
@@ -268,6 +270,7 @@ void test_L1_L2_vict() {
         ofs << vc_r << ',';
         ofs << vc_r << ',';
         ofs << "/,";
+        cout << "victim cache hit: " << n_vc_hit << endl;
         ofs << ((double)n_vc_hit)/vc_r << ',';
         ofs << ((double)n_vc_hit)/vc_r << ',';
         ofs << "/,";
