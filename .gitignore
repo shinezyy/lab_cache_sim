@@ -1,6 +1,7 @@
 # mine
 tags
 traces
+*.csv
 
 # Compiled Object files
 *.slo

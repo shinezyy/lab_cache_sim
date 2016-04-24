@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstring>
 #include <vector>
@@ -226,18 +227,58 @@ void test_L1_L2_vict() {
     cache *c1 = new cache(32 << 10, 32, 4, true); 
     victim_cache *vc = new victim_cache(1 << 10, 32, -1, true); 
     cache *c2 = new cache(2 << 20, 128, 8, true); 
+    ofstream ofs;
+    ofs.open("L1_L2_victim.csv", ios::out);
     for(i = 0; i < trace_files.size(); i++) {
         counter_init();
         c1->invalidate_all();
         vc->invalidate_all();
         c2->invalidate_all();
-        cout << trace_files[i] << "-------------------------------------------\n";
-        cout << "number of l1 cache accesses: " << l1_r << endl;
-        cout << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
-        cout << "L1 hit: " << l1_r_hit + l1_w_hit 
-            << ", miss: " << l1_r_miss + l1_w_miss << endl;
-        cout << "L2 hit: " << l2_r_hit + l2_w_hit 
-            << ", miss: " << l2_r_miss + l2_w_miss << endl;
-        cout << "victim cache hit: " << n_vc_hit << ", miss: " << n_vc_miss << endl;
+        ofs << trace_files[i] << endl;
+
+        ofs << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
+
+        ofs << ",number of accesses";
+        ofs << ",number of loads";
+        ofs << ",number of stores";
+        ofs << ",hit rate";
+        ofs << ",load hit rate";
+        ofs << ",store hit rate";
+        ofs << endl;
+
+        ofs << "L1 cache,";
+        ofs << l1_r + l1_w << ',';
+        ofs << l1_r << ',';
+        ofs << l1_w << ',';
+        ofs << ((double)(l1_r_hit + l1_w_hit))/(l1_r + l1_w) << ',';
+        ofs << ((double)l1_r_hit)/l1_r << ',';
+        ofs << ((double)l1_w_hit)/l1_w;
+        ofs << endl;
+
+        ofs << "L2 cache,";
+        ofs << l2_r + l2_w << ',';
+        ofs << l2_r << ',';
+        ofs << l2_w << ',';
+        ofs << ((double)(l2_r_hit + l2_w_hit))/(l2_r + l2_w) << ',';
+        ofs << ((double)l2_r_hit)/l2_r << ',';
+        ofs << ((double)l2_w_hit)/l2_w;
+        ofs << endl;
+
+        ofs << "victim cache,";
+        ofs << vc_r << ',';
+        ofs << vc_r << ',';
+        ofs << "/,";
+        ofs << ((double)n_vc_hit)/vc_r << ',';
+        ofs << ((double)n_vc_hit)/vc_r << ',';
+        ofs << "/,";
+        ofs << endl;
+
+        ofs << "memory,";
+        ofs << mem_r + mem_w << ',';
+        ofs << mem_r << ',';
+        ofs << mem_w << ",,,";
+        ofs << endl;
+
     }
+    ofs.close();
 }
