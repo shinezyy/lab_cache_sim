@@ -39,8 +39,6 @@ static void counter_init(){
     l2_w = 0;
 }
 
-int print_count = 0;
-
 uint64_t benchmark_L1_L2(cache *c1, cache *c2, vector<char *> *v_trace) { // return cycles
     uint32_t i;
     uint64_t all_cycles = 0;
