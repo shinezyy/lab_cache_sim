@@ -78,28 +78,30 @@ void test_L1() {
 
     ofstream ofs;
     ofs.open("L1.csv", ios::out);
+    ofs << "trace";
+    ofs << ",cycles";
+    ofs << ",storage";
+    ofs << ",number of accesses";
+    ofs << ",number of loads";
+    ofs << ",number of stores";
+    ofs << ",hit rate";
+    ofs << ",load hit rate";
+    ofs << ",store hit rate";
+    ofs << endl;
+
 
     cout << "========================================\n";
 
     cout << "Testing L1 c1:\n";
     cache *c1 = new cache(64 << 10, 8, 1, false); 
-    ofs << "L1 configuration 1" << endl;
     for(i = 0; i < trace_files.size(); i++) {
         counter_init();
         c1->invalidate_all();
 
-        ofs << trace_files[i] << endl;
-        ofs << benchmark_L1(c1, get_trace(trace_files[i])) << endl;
-
-        ofs << ",number of accesses";
-        ofs << ",number of loads";
-        ofs << ",number of stores";
-        ofs << ",hit rate";
-        ofs << ",load hit rate";
-        ofs << ",store hit rate";
-        ofs << endl;
-
+        ofs << trace_files[i] << ',';
+        ofs << benchmark_L1(c1, get_trace(trace_files[i])) << ',';
         ofs << "L1 cache,";
+
         ofs << l1_r + l1_w << ',';
         ofs << l1_r << ',';
         ofs << l1_w << ',';
@@ -107,28 +109,24 @@ void test_L1() {
         ofs << ((double)(l1_r_hit + l1_w_hit))/(l1_r + l1_w) << ',';
         ofs << ((double)l1_r_hit)/l1_r << ',';
         ofs << ((double)l1_w_hit)/l1_w;
+        ofs << endl;
+
+        ofs << ",,memory," << mem_r + mem_w << ',';
+        ofs << mem_r << ',';
+        ofs << mem_w << ",,,";
         ofs << endl;
     }
 
     cout << "Testing L1 c2:\n";
     cache *c2 = new cache(32 << 10, 32, 4, true); 
-    ofs << "L1 configuration 2" << endl;
     for(i = 0; i < trace_files.size(); i++) {
         counter_init();
         c2->invalidate_all();
 
-        ofs << trace_files[i] << endl;
-        ofs << benchmark_L1(c2, get_trace(trace_files[i])) << endl;
-
-        ofs << ",number of accesses";
-        ofs << ",number of loads";
-        ofs << ",number of stores";
-        ofs << ",hit rate";
-        ofs << ",load hit rate";
-        ofs << ",store hit rate";
-        ofs << endl;
-
+        ofs << trace_files[i] << ',';
+        ofs << benchmark_L1(c2, get_trace(trace_files[i])) << ',';
         ofs << "L1 cache,";
+
         ofs << l1_r + l1_w << ',';
         ofs << l1_r << ',';
         ofs << l1_w << ',';
@@ -136,28 +134,24 @@ void test_L1() {
         ofs << ((double)(l1_r_hit + l1_w_hit))/(l1_r + l1_w) << ',';
         ofs << ((double)l1_r_hit)/l1_r << ',';
         ofs << ((double)l1_w_hit)/l1_w;
+        ofs << endl;
+
+        ofs << ",,memory," << mem_r + mem_w << ',';
+        ofs << mem_r << ',';
+        ofs << mem_w << ",,,";
         ofs << endl;
     }
 
     cout << "Testing L1 c3:\n";
     cache *c3 = new cache(8 << 10, 64, -1, false); 
-    ofs << "L1 configuration 3" << endl;
     for(i = 0; i < trace_files.size(); i++) {
         counter_init();
         c3->invalidate_all();
 
-        ofs << trace_files[i] << endl;
-        ofs << benchmark_L1(c3, get_trace(trace_files[i])) << endl;
-
-        ofs << ",number of accesses";
-        ofs << ",number of loads";
-        ofs << ",number of stores";
-        ofs << ",hit rate";
-        ofs << ",load hit rate";
-        ofs << ",store hit rate";
-        ofs << endl;
-
+        ofs << trace_files[i] << ',';
+        ofs << benchmark_L1(c3, get_trace(trace_files[i])) << ',';
         ofs << "L1 cache,";
+
         ofs << l1_r + l1_w << ',';
         ofs << l1_r << ',';
         ofs << l1_w << ',';
@@ -165,6 +159,11 @@ void test_L1() {
         ofs << ((double)(l1_r_hit + l1_w_hit))/(l1_r + l1_w) << ',';
         ofs << ((double)l1_r_hit)/l1_r << ',';
         ofs << ((double)l1_w_hit)/l1_w;
+        ofs << endl;
+
+        ofs << ",,memory," << mem_r + mem_w << ',';
+        ofs << mem_r << ',';
+        ofs << mem_w << ",,,";
         ofs << endl;
     }
     ofs.close();
