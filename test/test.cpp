@@ -54,7 +54,7 @@ extern void test_L1_L2_vict();
 
 int main() {
     //test_L1();
-    //test_L1_L2();
+    test_L1_L2();
     test_L1_L2_vict();
     //test_fin();
     //test_cache();

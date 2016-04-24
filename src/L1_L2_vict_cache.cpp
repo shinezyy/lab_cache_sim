@@ -178,7 +178,6 @@ uint64_t benchmark_L1_L2_vict(cache *c1, victim_cache *vc, cache *c2,
         // L2 cache :
         all_cycles += L2_LTC;
         bool l2_miss = false;
-
         if(load) {
             l2_r += 1;
             if(!c2->read(addr)) { // miss
@@ -234,8 +233,8 @@ void test_L1_L2_vict() {
         c1->invalidate_all();
         vc->invalidate_all();
         c2->invalidate_all();
-        ofs << trace_files[i] << endl;
 
+        ofs << trace_files[i] << endl;
         ofs << "cycles: " << benchmark_L1_L2_vict(c1, vc, c2, get_trace(trace_files[i])) << endl;
 
         ofs << ",number of accesses";
